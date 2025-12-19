@@ -1,34 +1,52 @@
 // Typewriter Effect
-const texts = [
-    "I'M A TECHNICAL TRAINER",
-    "I'M A .NET EXPERT",
-    "I'M A DATA ANALYST",
-    "I'M A RESEARCHER",
-    "I'M A MENTOR"
-];
+// Optimized Typewriter Effect - Minimizes Forced Reflows
+(function() {
+    // Cache DOM elements and text at the start
+    const typewriterElement = document.getElementById('typewriter');
+    if (!typewriterElement) return; // Exit if element not found
+    
+    const texts = ["I'M A TECHNICAL TRAINER", "EXPERT IN EXCEL & DATA ANALYSIS", "BEST TUTOR IN CHANDIGARH"];
+    let textIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typingDelay = 100; // Base speed
 
-let count = 0;
-let index = 0;
-let currentText = '';
-let letter = '';
-
-(function type() {
-    if (count === texts.length) {
-        count = 0;
+    // Function to type, using requestAnimationFrame for batching
+    function type() {
+        const currentText = texts[textIndex];
+        
+        // Calculate the text to display
+        let displayText = isDeleting 
+            ? currentText.substring(0, charIndex - 1)
+            : currentText.substring(0, charIndex + 1);
+        
+        // Update the DOM ONCE per frame
+        typewriterElement.textContent = displayText;
+        
+        // Determine next step and delay
+        if (!isDeleting && displayText === currentText) {
+            // Done typing, wait then start deleting
+            typingDelay = 1500;
+            isDeleting = true;
+        } else if (isDeleting && displayText === '') {
+            // Done deleting, move to next text
+            isDeleting = false;
+            textIndex = (textIndex + 1) % texts.length;
+            typingDelay = 500;
+        } else {
+            // Continue typing/deleting
+            typingDelay = isDeleting ? 50 : 100;
+            charIndex = isDeleting ? charIndex - 1 : charIndex + 1;
+        }
+        
+        // Schedule next step using setTimeout
+        setTimeout(type, typingDelay);
     }
-    currentText = texts[count];
-    letter = currentText.slice(0, ++index);
 
-    document.getElementById('typewriter').textContent = letter;
-    if (letter.length === currentText.length) {
-        count++;
-        index = 0;
-        setTimeout(type, 2000); // Wait at end
-    } else {
-        setTimeout(type, 100); // Typing speed
-    }
-}());
-
+    // START the effect after a brief initial delay
+    // This ensures initial styles are settled to prevent first reflow
+    setTimeout(type, 500);
+})();
 // Smooth Scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
