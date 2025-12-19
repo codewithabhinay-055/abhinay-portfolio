@@ -475,7 +475,7 @@ body {
 /* Footer */
 .footer {
     background-color: #050505;
-    color: var(--text-gray);
+    color: #ffffff;
     padding: 3rem 10% 2rem;
 }
 
@@ -535,7 +535,7 @@ body {
     padding-top: 2rem;
     border-top: 1px solid #333;
     font-size: 0.9rem;
-    color: #666;
+    color: #ffffff !important;
 }
 
 /* Responsive Design */
@@ -679,4 +679,7 @@ body {
     .footer-content {
         grid-template-columns: 1fr;
     }
+    .footer p,.footer a {
+        color: #e0e0e0;
+    };
 }
